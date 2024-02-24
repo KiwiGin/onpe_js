@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>ONPE - Oficina Nacional de Procesos Electorales</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
+	<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="css/style.css" rel="stylesheet" type="text/css" media="screen" />
+
+	<script src="js/presidencial.js"></script>
+</head>
+
+<body>
+	<header>
+		<div class="container">
+			<div class="pull-left logo-onpe">
+				<div class="pull-left">
+					<a href="index.html"><img src="images/onpe-trans.png"></a>
+				</div>
+
+				<div class="pull-left">
+					<h1>PRESENTACIÓN DE RESULTADOS</h1>
+				</div>
+			</div>
+
+			<div class="pull-right logo">
+				<img src="images/eegg2016-trans.png" width="218" height="35">
+			</div>
+		</div>
+	</header>
+
+	<div class="container">
+		<img src="images/f-presidencial.jpg" width="1170" height="248" class="img-responsive mg30top">
+
+		<section class="menu navbar-default menu05">
+			<div class="navbar-header">
+				<button class="navbar-toggle collapsed" type="button" data-toggle="collapse"
+					data-target=".bs-navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<a name="posicion"></a>
+			<nav class="navbar-collapse bs-navbar-collapse collapse" aria-expanded="false">
+				<ul class="nav navbar-nav">
+					<li class="bt-azul act-azul">
+						<a href="./presidenciales.html">PRESIDENCIAL</a>
+					</li>
+					<li class="bt-amarillo">
+						<a href="./actas_ubigeo.html">ACTAS</a>
+					</li>
+					<li class="bt-rojo">
+						<a href="./participacion.html">PARTICIPACIÓN CIUDADANA</a>
+					</li>
+				</ul>
+			</nav>
+		</section>
+		<br /><br /><br /><br />
+
+		<section class="contenedor">
+			<div class="row">
+				<div class="col-xs-12 col-md-3">
+					<div class="menu-interna">
+						<ul>
+							<li><a href="./presidenciales.html">RESUMEN GENERAL</a></li>
+							<li><a href="./resultados_presidenciales.html" class="act-izq">RESULTADOS PRESIDENCIALES</a>
+							</li>
+							<li><a href="./resultados_voto.html">RESULTADOS POR TIPO DE VOTOS</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-xs-12 col-md-9" id="impreso">
+					<div class="contenido-interna">
+						<div class="titulos col-xs-12">
+							<div class="col-xs-11">
+								<h3> <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"
+										style="font-size:19px"></span> SEGUNDA ELECCIÓN PRESIDENCIAL 2016: RESULTADOS
+									PRESIDENCIALES</h3>
+							</div>
+
+							<div class="col-xs-1 oculto-boton-print">
+								<button onclick="printContent('impreso');"><i
+										class="fa fa-print ico-print"></i></button>
+							</div>
+						</div>
+
+						<div class="col-xs-12">
+							<p class="subtitle">
+								RESULTADOS DE ELECCIONES PRESIDENCIALES
+							</p>
+							<form id="frmBuscar" name="frmBuscar" action="" method="post" class="horizontal-form">
+								<div id="divUbicombo" class="row">
+									<div class="col-md-3" style="display:block">
+										<label class="control-label">Ámbito:</label>
+										<div id="ambito" class="form-group">
+											<select name="cdgoAmbito" id="cdgoAmbito" class="form-control" onChange="buscarAmbito('10', '', 'PR', this.value, '');
+										$('#aComentarioProvincia').html('');
+										">
+												<option value="">TODOS</option>
+												<option value="P">PERÚ</option>
+												<option value="E">EXTRANJERO</option>
+											</select>
+										</div>
+									</div>
+									<div id="dvNombreDepartamento" class="col-md-3" style="display:none">
+										<div class="form-group">
+											<label id="lblDepartamento" class="control-label">Departamento:</label>
+											<div id="departamentos">
+												<select name="cdgoDep" id="cdgoDep" class="form-control"
+													onChange="getProvinciasDepa('10', 'CPR', this.value);">
+													<option selected="selected" value="">TODOS</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div id="dvNombreProvincia" class="col-md-3" style="display:none">
+										<div class="form-group">
+											<label id="lblProvincia" class="control-label">Provincia:</label>
+											<div id="provincias">
+												<select id="cdgoProv" name="cdgoProv" class="form-control"
+													onchange="getResultadosDistMuni('140100', '10', 'EM', this.value, '');">
+													<option selected="selected" value="">TODOS</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div id="dvNombreDistrito" class="col-md-3" style="display:none">
+										<div class="form-group">
+											<label id="lblDistrito" class="control-label">DISTRITO:</label>
+											<div id="distritos">
+												<select id="cdgoDist" name="cdgoDist" class="form-control"
+													onchange="getResultadosDist('140100', '10', 'EM', this.value, '');">
+													<option selected="selected" value="">TODOS</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div id="divDetalle">
+
+								</div>
+
+							</form>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</section>
+
+	</div>
+	<br /><br />
+	<footer class="footer-inside">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 direc01">
+					<span>CONTÁCTENOS</span>
+					<p>Jr. Washington 1894, Cercado de Lima </p>
+					<p>Correo electrónico: <a href="#">informes@onpe.gob.pe</a></p>
+					<p>Central Telefónica: 417 - 0630 / Lunes a Viernes 08:30 - 16:30 hrs</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	
+</body>
+
+</html>

@@ -219,7 +219,7 @@ input[type="radio"]:checked + label .fa-circle-o {
     margin: 24px 0;
 }
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus {
-    color: #FFF;
+    color: #ffffff;
     border-radius: 20px;
     -moz-border-radius: 20px ;
     -webkit-border-radius: 20px;
