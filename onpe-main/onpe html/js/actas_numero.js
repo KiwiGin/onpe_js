@@ -1,11 +1,11 @@
 const actas_bscarPrNmroMesa = async () => {
   
     const id = document.getElementById('nroMesa').value
-    const data = await fetch(`http://localhost/onpe_sweb_php/actas/numero/${id}`)
+    const data = await fetch(`https://oaemdl.es/onpe_sweb_php/actas/numero/${id}`)
     
     let html=``
     
-    if(data.status==200 && resultados!=""){
+    if(data.status==200){
       const resultados = await data.json()
       
       //console.log(resultados)

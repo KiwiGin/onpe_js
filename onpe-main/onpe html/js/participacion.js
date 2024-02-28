@@ -1,3 +1,13 @@
+const onImageError = (element, cont=0) => {
+  if (cont < 3) {
+    element.src = element.src
+    element.onerror = () => onImageError(element, cont + 1)
+  } else {
+    element.onerror = null
+    element.src = 'https://www.questionpro.com/userimages/site_media/no-image.png'
+  }
+}
+
 const getNacional = async () => {
   const parametro = new URLSearchParams(window.location.search).get('id').split(",")
   let depas_nac, data_depas_nac, provs_nac, data_provs_nac, dists_nac, data_dists_nac
@@ -95,59 +105,51 @@ const getNacional = async () => {
     }
   }
 
-  //console.log(id1);
-  //console.log(id2);
-  //console.log(id3);
-  //console.log(id4);
-
-
-
-
-
   let html = `
         <div class="titulos col-xs-12">
-                          <div class="col-xs-11">
-                            <h3> <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true" style="font-size:19px"></span> SEGUNDA ELECCIÓN PRESIDENCIAL 2016: PARTICIPACIÓN CIUDADANA</h3>
-                          </div>
+          <div class="col-xs-11">
+            <h3> <span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true" style="font-size:19px"></span> SEGUNDA ELECCIÓN PRESIDENCIAL 2016: PARTICIPACIÓN CIUDADANA</h3>
+          </div>
+
+          <div class="col-xs-1 oculto-boton-print">
+            <button onclick="printContent('impreso');"><i class="fa fa-print ico-print"></i></button>
+          </div>
+        </div>
         
-                          <div class="col-xs-1 oculto-boton-print">
-                            <button onclick="printContent('impreso');"><i class="fa fa-print ico-print"></i></button>
-                          </div>
-                        </div>
-                        
-                        <table>
-                          <tbody>
-                            <tr>
-                              <td>
-                                <button type="button" class="btn btn-primary" onclick="history.go(-1);"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> REGRESAR</button>
-                              </td>
-                              <td width="60%">&nbsp;</td>
-                              <td>
-                                <button type="button" class="btn btn-primary" onclick="location.href='./generar_datos_participacion_excel.php?tipoCobertura=Nacional&amp;ubigeo=Todos'">REPORTE DETALLADO EN EXCEL</button>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                                  
-                        <div class="col-xs-12">
-                          <p class="subtitle">ACTAS CONTABILIZADAS</p>
-                          <div class="col-lg-7 centered">
-                            <div class="col-xs-12 col-md-12 col-lg-12 cont-curv">
-                              <div class="col-xs-3 col-md-1">
-                                <span class="glyphicon glyphicon-ok-circle ico-info" aria-hidden="true"></span>
-                              </div>
-        
-                              <div class="col-xs-9 col-md-11">
-                                <ul>
-                                  <li>ACTUALIZADO EL 20/06/2016 A LAS 19:16 h </li>
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                          <br/>
-                        </div>
-        
-                        <div class="col-xs-12 line pbot30">`
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <button type="button" class="btn btn-primary" onclick="history.go(-1);"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> REGRESAR</button>
+              </td>
+              <td width="60%">&nbsp;</td>
+              <td>
+                <button type="button" class="btn btn-primary" onclick="location.href='./generar_datos_participacion_excel.php?tipoCobertura=Nacional&amp;ubigeo=Todos'">REPORTE DETALLADO EN EXCEL</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+                  
+        <div class="col-xs-12">
+          <p class="subtitle">ACTAS CONTABILIZADAS</p>
+          <div class="col-lg-7 centered">
+            <div class="col-xs-12 col-md-12 col-lg-12 cont-curv">
+              <div class="col-xs-3 col-md-1">
+                <span class="glyphicon glyphicon-ok-circle ico-info" aria-hidden="true"></span>
+              </div>
+
+              <div class="col-xs-9 col-md-11">
+                <ul>
+                  <li>ACTUALIZADO EL 20/06/2016 A LAS 19:16 h </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <br/>
+        </div>
+
+        <div class="col-xs-12 line pbot30">
+      `
 
 
   if (id1 && !id2) {
@@ -164,7 +166,7 @@ const getNacional = async () => {
     depas_nac.forEach(depa_nac => {
       if (depa_nac.DPD == id2) {
         html += `<div class="col-xs-12 col-md-6" id="graf">
-            <img src="https://www.web.onpe.gob.pe/modElecciones/elecciones/elecciones2016/PRP2V2016/imagen.jpg?_tot_participacion=${depa_nac.PTV}&_tot_ausentismo=${depa_nac.PTA}" class="img-responsive">
+            <img src="https://www.web.onpe.gob.pe/modElecciones/elecciones/elecciones2016/PRP2V2016/imagen.jpg?_tot_participacion=${depa_nac.PTV}&_tot_ausentismo=${depa_nac.PTA}" onerror="onImageError(this)" class="img-responsive">
           </div>
         `
       }
@@ -174,9 +176,10 @@ const getNacional = async () => {
   else if (id3 && !id4) {
     provs_nac.forEach(prov_nac => {
       if (prov_nac.DPD == id3) {
-        html += `<div class="col-xs-12 col-md-6" id="graf">
-            <img src="https://www.web.onpe.gob.pe/modElecciones/elecciones/elecciones2016/PRP2V2016/imagen.jpg?_tot_participacion=${prov_nac.PTV}&_tot_ausentismo=${prov_nac.PTA}" class="img-responsive">
-          </div>
+        html += `
+        <div class="col-xs-12 col-md-6" id="graf">
+          <img src="https://www.web.onpe.gob.pe/modElecciones/elecciones/elecciones2016/PRP2V2016/imagen.jpg?_tot_participacion=${prov_nac.PTV}&_tot_ausentismo=${prov_nac.PTA}" onerror="onImageError(this)" class="img-responsive">
+        </div>
         `
       }
     })
@@ -186,16 +189,18 @@ const getNacional = async () => {
     if (Array.isArray(dists_nac)){
       dists_nac.forEach(dist_nac => {
         if (dist_nac.DPD == id4) {
-          html += `<div class="col-xs-12 col-md-6" id="graf">
-              <img src="https://www.web.onpe.gob.pe/modElecciones/elecciones/elecciones2016/PRP2V2016/imagen.jpg?_tot_participacion=${dist_nac.PTV}&_tot_ausentismo=${dist_nac.PTA}" class="img-responsive">
-            </div>
+          html += `
+          <div class="col-xs-12 col-md-6" id="graf">
+            <img src="https://www.web.onpe.gob.pe/modElecciones/elecciones/elecciones2016/PRP2V2016/imagen.jpg?_tot_participacion=${dist_nac.PTV}&_tot_ausentismo=${dist_nac.PTA}" onerror="onImageError(this)" class="img-responsive">
+          </div>
           `
         }
       })
     }else if (typeof dists_nac === 'object' && dists_nac !== null) {
-              html += `<div class="col-xs-12 col-md-6" id="graf">
-                      <img src="https://www.web.onpe.gob.pe/modElecciones/elecciones/elecciones2016/PRP2V2016/imagen.jpg?_tot_participacion=${dists_nac.PTV}&_tot_ausentismo=${dists_nac.PTA}" class="img-responsive">
-                  </div>
+              html += `
+              <div class="col-xs-12 col-md-6" id="graf">
+                <img src="https://www.web.onpe.gob.pe/modElecciones/elecciones/elecciones2016/PRP2V2016/imagen.jpg?_tot_participacion=${dists_nac.PTV}&_tot_ausentismo=${dists_nac.PTA}" onerror="onImageError(this)" class="img-responsive">
+              </div>
               `
     } else {
         console.log("El tipo de dists_nac no es válido para iterar");
@@ -203,12 +208,8 @@ const getNacional = async () => {
 
   }
 
-
-
-
-
   html += `<div class="col-xs-12 col-md-6">
-              <div class="cont-recto" style="margin-bottom:10px">`
+          <div class="cont-recto" style="margin-bottom:10px">`
 
   if (id1 && !id2) {
     html += `Ámbito: ${id1}`
@@ -297,7 +298,8 @@ const getNacional = async () => {
           }
       });
     } else if (typeof dists_nac === 'object' && dists_nac !== null) {
-          html += `</div>
+          html += `
+          </div>
           <p class="subtitle">ELECTORES HÁBILES ${dists_nac.EH}</p>
           <div id="page-wrap">
             <table class="table09_2" cellspacing="0">
@@ -307,7 +309,6 @@ const getNacional = async () => {
                   <th>AUSENTISMO</th>
                 </tr>
               </thead>
-    
         `
 
     } else {
@@ -315,9 +316,6 @@ const getNacional = async () => {
     }
 
   }
-
-
-
 
   if (id1 && !id2) {
     if(id1=='Nacional'){
@@ -344,41 +342,41 @@ const getNacional = async () => {
             <td>% TOTAL: ${totales_ext[3]}</td>
     `
   }
-    html+=`</tr>
-        </tbody>
-        </table>
-        </div>
-        </div>
-        
+    html+=`
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
         
         <div class="col-xs-12">
-        <p class="subtitle">Consulta de participación DETALLADO </p>
-        <div id="page-wrap">
-        <table class="table21">
-        <tbody id="resultados">
-        <tr class="titulo_tabla">
-          <td>${titulos[id1][0]}</td>
-          <td>TOTAL ASISTENTES</td>
-          <td>% TOTAL ASISTENTES</td>
-          <td>TOTAL AUSENTES</td>
-          <td>% TOTAL AUSENTES</td>
-          <td>ELECTORES HÁBILES</td>
-        </tr>
+          <p class="subtitle">Consulta de participación DETALLADO </p>
+            <div id="page-wrap">
+              <table class="table21">
+                <tbody id="resultados">
+                  <tr class="titulo_tabla">
+                    <td>${titulos[id1][0]}</td>
+                    <td>TOTAL ASISTENTES</td>
+                    <td>% TOTAL ASISTENTES</td>
+                    <td>TOTAL AUSENTES</td>
+                    <td>% TOTAL AUSENTES</td>
+                    <td>ELECTORES HÁBILES</td>
+                  </tr>
     
-        `
+    `
     depas_nac.forEach(depa_nac => {
       html += `
-                <tr onclick="location.href='./participacion_total.html?id=${id1},${depa_nac.DPD}'" onmouseover="this.style.cursor = &quot;pointer&quot;; this.style.color = &quot;grey&quot;" onmouseout="this.style.color = &quot;black&quot;" style="cursor: pointer; color: black;">
-                <td>${depa_nac.DPD}</td>
-                <td>${depa_nac.TV}</td>
-                <td>${depa_nac.PTV}</td>
-                <td>${depa_nac.TA}</td>
-                <td>${depa_nac.PTA}</td>
-                <td>${depa_nac.EH}</td>
-                </tr>
+        <tr onclick="location.href='./participacion_total.html?id=${id1},${depa_nac.DPD}'" onmouseover="this.style.cursor = &quot;pointer&quot;; this.style.color = &quot;grey&quot;" onmouseout="this.style.color = &quot;black&quot;" style="cursor: pointer; color: black;">
+          <td>${depa_nac.DPD}</td>
+          <td>${depa_nac.TV}</td>
+          <td>${depa_nac.PTV}</td>
+          <td>${depa_nac.TA}</td>
+          <td>${depa_nac.PTA}</td>
+          <td>${depa_nac.EH}</td>
+        </tr>
                 
-                `
+      `
     });
     if(id1=='Nacional'){
       html += `
@@ -422,35 +420,35 @@ const getNacional = async () => {
     depas_nac.forEach(depa_nac => {
       if (depa_nac.DPD == id2) {
         html += `
-            <tbody>
-              <tr>
-                <td>TOTAL: ${depa_nac.TV}</td>
-                <td>TOTAL: ${depa_nac.TA}</td>
-              </tr>
-              <tr>
-                <td>% TOTAL: ${depa_nac.PTV}</td>
-                <td>% TOTAL: ${depa_nac.PTA}</td>
-              </tr>
-            </tbody>
-            </table>
-            </div>
+                  <tbody>
+                    <tr>
+                      <td>TOTAL: ${depa_nac.TV}</td>
+                      <td>TOTAL: ${depa_nac.TA}</td>
+                    </tr>
+                    <tr>
+                      <td>% TOTAL: ${depa_nac.PTV}</td>
+                      <td>% TOTAL: ${depa_nac.PTA}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             
             </div>
             
             <div class="col-xs-12">
-            <p class="subtitle">Consulta de participación DETALLADO </p>
-            <div id="page-wrap">
-            <table class="table21">
-            <tbody id="resultados">
-            <tr class="titulo_tabla">
-              <td>${titulos[id1][1]}</td>
-              <td>TOTAL ASISTENTES</td>
-              <td>% TOTAL ASISTENTES</td>
-              <td>TOTAL AUSENTES</td>
-              <td>% TOTAL AUSENTES</td>
-              <td>ELECTORES HÁBILES</td>
-            </tr>
+              <p class="subtitle">Consulta de participación DETALLADO </p>
+                <div id="page-wrap">
+                  <table class="table21">
+                    <tbody id="resultados">
+                      <tr class="titulo_tabla">
+                        <td>${titulos[id1][1]}</td>
+                        <td>TOTAL ASISTENTES</td>
+                        <td>% TOTAL ASISTENTES</td>
+                        <td>TOTAL AUSENTES</td>
+                        <td>% TOTAL AUSENTES</td>
+                        <td>ELECTORES HÁBILES</td>
+                      </tr>
         
             `
         
@@ -458,31 +456,31 @@ const getNacional = async () => {
     });
     provs_nac.forEach(prov => {
       html += `
-                <tr onclick="location.href='./participacion_total.html?id=${id1},${id2},${prov.DPD}'" onmouseover="this.style.cursor = &quot;pointer&quot;; this.style.color = &quot;grey&quot;" onmouseout="this.style.color = &quot;black&quot;" style="cursor: pointer; color: black;">
-                <td>${prov.DPD}</td>
-                <td>${prov.TV}</td>
-                <td>${prov.PTV}</td>
-                <td>${prov.TA}</td>
-                <td>${prov.PTA}</td>
-                <td>${prov.EH}</td>
-                </tr>
+        <tr onclick="location.href='./participacion_total.html?id=${id1},${id2},${prov.DPD}'" onmouseover="this.style.cursor = &quot;pointer&quot;; this.style.color = &quot;grey&quot;" onmouseout="this.style.color = &quot;black&quot;" style="cursor: pointer; color: black;">
+          <td>${prov.DPD}</td>
+          <td>${prov.TV}</td>
+          <td>${prov.PTV}</td>
+          <td>${prov.TA}</td>
+          <td>${prov.PTA}</td>
+          <td>${prov.EH}</td>
+        </tr>
                 
-                `
+      `
     });
     depas_nac.forEach(depa_nac => {
       if (depa_nac.DPD == id2) {
         html += `
-        <tr>
-          <td>TOTALES</td>
-          <td>${depa_nac.TV}</td>
-          <td>${depa_nac.PTV}</td>
-          <td>${depa_nac.TA}</td>
-          <td>${depa_nac.PTA}</td>
-          <td>${depa_nac.EH}</td>
-        </tr>
-        </tbody>
-        </table>
-        </div>
+                <tr>
+                  <td>TOTALES</td>
+                  <td>${depa_nac.TV}</td>
+                  <td>${depa_nac.PTV}</td>
+                  <td>${depa_nac.TA}</td>
+                  <td>${depa_nac.PTA}</td>
+                  <td>${depa_nac.EH}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         
         </div>
         
@@ -494,35 +492,35 @@ const getNacional = async () => {
     provs_nac.forEach(prov_nac => {
       if (prov_nac.DPD == id3) {
         html += `
-            <tbody>
-              <tr>
-                <td>TOTAL: ${prov_nac.TV}</td>
-                <td>TOTAL: ${prov_nac.TA}</td>
-              </tr>
-              <tr>
-                <td>% TOTAL: ${prov_nac.PTV}</td>
-                <td>% TOTAL: ${prov_nac.PTA}</td>
-              </tr>
-            </tbody>
-            </table>
-            </div>
-            </div>
+                    <tbody>
+                      <tr>
+                        <td>TOTAL: ${prov_nac.TV}</td>
+                        <td>TOTAL: ${prov_nac.TA}</td>
+                      </tr>
+                      <tr>
+                        <td>% TOTAL: ${prov_nac.PTV}</td>
+                        <td>% TOTAL: ${prov_nac.PTA}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             
             </div>
             
             <div class="col-xs-12">
-            <p class="subtitle">Consulta de participación DETALLADO </p>
-            <div id="page-wrap">
-            <table class="table21">
-            <tbody id="resultados">
-            <tr class="titulo_tabla">
-              <td>${titulos[id1][2]}</td>
-              <td>TOTAL ASISTENTES</td>
-              <td>% TOTAL ASISTENTES</td>
-              <td>TOTAL AUSENTES</td>
-              <td>% TOTAL AUSENTES</td>
-              <td>ELECTORES HÁBILES</td>
-            </tr>
+              <p class="subtitle">Consulta de participación DETALLADO </p>
+                <div id="page-wrap">
+                  <table class="table21">
+                    <tbody id="resultados">
+                      <tr class="titulo_tabla">
+                        <td>${titulos[id1][2]}</td>
+                        <td>TOTAL ASISTENTES</td>
+                        <td>% TOTAL ASISTENTES</td>
+                        <td>TOTAL AUSENTES</td>
+                        <td>% TOTAL AUSENTES</td>
+                        <td>ELECTORES HÁBILES</td>
+                      </tr>
         
             `
         
@@ -531,28 +529,28 @@ const getNacional = async () => {
     if (Array.isArray(dists_nac)) {
       console.log('ARRAY');
       dists_nac.forEach(dist_nac => {
-            html += `
-            <tr onclick="location.href='./participacion_total.html?id=${id1},${id2},${id3},${dist_nac.DPD}'" onmouseover="this.style.cursor = &quot;pointer&quot;; this.style.color = &quot;grey&quot;" onmouseout="this.style.color = &quot;black&quot;" style="cursor: pointer; color: black;">
-            <td>${dist_nac.DPD}</td>
-            <td>${dist_nac.TV}</td>
-            <td>${dist_nac.PTV}</td>
-            <td>${dist_nac.TA}</td>
-            <td>${dist_nac.PTA}</td>
-            <td>${dist_nac.EH}</td>
-            </tr>
-            
-            `
+        html += `
+        <tr onclick="location.href='./participacion_total.html?id=${id1},${id2},${id3},${dist_nac.DPD}'" onmouseover="this.style.cursor = &quot;pointer&quot;; this.style.color = &quot;grey&quot;" onmouseout="this.style.color = &quot;black&quot;" style="cursor: pointer; color: black;">
+          <td>${dist_nac.DPD}</td>
+          <td>${dist_nac.TV}</td>
+          <td>${dist_nac.PTV}</td>
+          <td>${dist_nac.TA}</td>
+          <td>${dist_nac.PTA}</td>
+          <td>${dist_nac.EH}</td>
+        </tr>
+        
+        `
 
       });
     } else if (typeof dists_nac === 'object' && dists_nac !== null) {
           html += `
           <tr onclick="location.href='./participacion_total.html?id=${id1},${id2},${id3},${dists_nac.DPD}'" onmouseover="this.style.cursor = &quot;pointer&quot;; this.style.color = &quot;grey&quot;" onmouseout="this.style.color = &quot;black&quot;" style="cursor: pointer; color: black;">
-          <td>${dists_nac.DPD}</td>
-          <td>${dists_nac.TV}</td>
-          <td>${dists_nac.PTV}</td>
-          <td>${dists_nac.TA}</td>
-          <td>${dists_nac.PTA}</td>
-          <td>${dists_nac.EH}</td>
+            <td>${dists_nac.DPD}</td>
+            <td>${dists_nac.TV}</td>
+            <td>${dists_nac.PTV}</td>
+            <td>${dists_nac.TA}</td>
+            <td>${dists_nac.PTA}</td>
+            <td>${dists_nac.EH}</td>
           </tr>
           
           `
@@ -586,19 +584,19 @@ const getNacional = async () => {
       dists_nac.forEach(dist_nac => {
           if (dist_nac.DPD == id4) {
             html += `
-              <tbody>
-                <tr>
-                  <td>TOTAL: ${dist_nac.TV}</td>
-                  <td>TOTAL: ${dist_nac.TA}</td>
-                </tr>
-                <tr>
-                  <td>% TOTAL: ${dist_nac.PTV}</td>
-                  <td>% TOTAL: ${dist_nac.PTA}</td>
-                </tr>
-              </tbody>
-              </table>
-              </div>
-              </div>
+                      <tbody>
+                        <tr>
+                          <td>TOTAL: ${dist_nac.TV}</td>
+                          <td>TOTAL: ${dist_nac.TA}</td>
+                        </tr>
+                        <tr>
+                          <td>% TOTAL: ${dist_nac.PTV}</td>
+                          <td>% TOTAL: ${dist_nac.PTA}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               
               </div>
           `
@@ -607,19 +605,19 @@ const getNacional = async () => {
       });
     } else if (typeof dists_nac === 'object' && dists_nac !== null) {
       html += `
-        <tbody>
-          <tr>
-            <td>TOTAL: ${dists_nac.TV}</td>
-            <td>TOTAL: ${dists_nac.TA}</td>
-          </tr>
-          <tr>
-            <td>% TOTAL: ${dists_nac.PTV}</td>
-            <td>% TOTAL: ${dists_nac.PTA}</td>
-          </tr>
-        </tbody>
-        </table>
-        </div>
-        </div>
+                <tbody>
+                  <tr>
+                    <td>TOTAL: ${dists_nac.TV}</td>
+                    <td>TOTAL: ${dists_nac.TA}</td>
+                  </tr>
+                  <tr>
+                    <td>% TOTAL: ${dists_nac.PTV}</td>
+                    <td>% TOTAL: ${dists_nac.PTA}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         
         </div>
     `
@@ -630,15 +628,7 @@ const getNacional = async () => {
     console.log('ya estas en el id4');
   }
 
-
-
-
-
-
-
-
   document.getElementById('contenido-interna').innerHTML = html;
-
 
 }
 
